@@ -28,20 +28,32 @@ namespace EsercizioTask
         private void bntEsegui_Click(object sender, RoutedEventArgs e)
         {
             int a = int.Parse(txtA.Text);
-            Task.Run(() => Multipli(a));
+            ProgressBar.Minimum = 0;
+            ProgressBar.Maximum = 100;
+            ProgressBar.Value = 0;
+            Task t1 = Task.Factory.StartNew(() => Multipli(a));
         }
 
         private void Multipli(int a)
         {
             int d = 200000000;
-            for (int i = 0; i <= d; i++)
+            int m = 0;
+            for (int i = 1; i <= d; i++)
             {
                 if ((i % a) == 0)
                 {
-                    lblMultipli.Content = $"{i / a}/{d}";
+                    m++;
                 }
-                ProgressBar.Value = i / d;
+                if (i % 2000000 == 0)
+                {
+                    ProgressBar.Dispatcher.Invoke(() =>
+                    ProgressBar.Value++);
+                };
             }
+
+            lblMultipli.Dispatcher.Invoke(() =>
+                lblMultipli.Content = m
+            );
         }
     }
 }
